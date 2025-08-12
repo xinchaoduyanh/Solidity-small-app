@@ -29,7 +29,7 @@ export default function ConnectWalletButton() {
     return (
       <Button
         onClick={() => window.open("https://metamask.io/download/", "_blank")}
-        className="bg-orange-600 hover:bg-orange-700"
+        className="bg-orange-600 hover:bg-orange-700 dark:bg-orange-500 dark:hover:bg-orange-600"
       >
         Install MetaMask
       </Button>
@@ -42,7 +42,7 @@ export default function ConnectWalletButton() {
       <Button
         onClick={connect}
         disabled={isConnecting}
-        className="bg-blue-600 hover:bg-blue-700"
+        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
       >
         {isConnecting ? "Connecting..." : "Connect Wallet"}
       </Button>
@@ -53,7 +53,7 @@ export default function ConnectWalletButton() {
   if (isWrongNetwork) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm text-red-600">Wrong Network</span>
+        <span className="text-sm text-destructive">Wrong Network</span>
         <Button
           onClick={() => {
             if (provider) {
@@ -65,7 +65,8 @@ export default function ConnectWalletButton() {
               });
             }
           }}
-          className="border border-red-300 text-red-600 hover:bg-red-50 bg-transparent"
+          variant="outline"
+          className="text-destructive border-destructive/30 hover:bg-destructive/10"
         >
           Switch Network
         </Button>
@@ -77,11 +78,8 @@ export default function ConnectWalletButton() {
   if (error) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-sm text-red-600">{error}</span>
-        <Button
-          onClick={connect}
-          className="border border-gray-300 bg-transparent hover:bg-gray-50"
-        >
+        <span className="text-sm text-destructive">{error}</span>
+        <Button onClick={connect} variant="outline">
           Retry
         </Button>
       </div>
@@ -91,18 +89,15 @@ export default function ConnectWalletButton() {
   // Connected state
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm text-gray-600">
+      <span className="text-sm text-muted-foreground">
         {account && formatAddress(account)}
         {chainId && (
-          <span className="ml-2 text-xs text-gray-400">
+          <span className="ml-2 text-xs text-muted-foreground/70">
             (Chain: {parseInt(chainId, 16)})
           </span>
         )}
       </span>
-      <Button
-        onClick={disconnect}
-        className="border border-gray-300 bg-transparent hover:bg-gray-50 text-sm px-3 py-1.5"
-      >
+      <Button onClick={disconnect} variant="outline" size="sm">
         Disconnect
       </Button>
     </div>
