@@ -1,0 +1,9 @@
+id,name,description,color,created_at
+1,Công việc cá nhân,Những nhiệm vụ liên quan đến cuộc sống cá nhân,#FF6B6B,2024-01-01 00:00:00
+2,Công việc học tập,Nhiệm vụ liên quan đến việc học và nghiên cứu,#4ECDC4,2024-01-01 00:00:00
+3,Công việc nhà,Những việc cần làm trong nhà,#45B7D1,2024-01-01 00:00:00
+4,Dự án công việc,Nhiệm vụ liên quan đến công việc và dự án,#96CEB4,2024-01-01 00:00:00
+5,Sức khỏe & Thể thao,Các hoạt động liên quan đến sức khỏe và thể dục,#FFEAA7,2024-01-01 00:00:00
+6,Sáng tạo & Nghệ thuật,Nhiệm vụ liên quan đến sáng tạo và nghệ thuật,#DDA0DD,2024-01-01 00:00:00
+7,Tài chính & Đầu tư,Quản lý tài chính và các khoản đầu tư,#98D8C8,2024-01-01 00:00:00
+8,Du lịch & Khám phá,Kế hoạch du lịch và khám phá,#F7DC6F,2024-01-01 00:00:00

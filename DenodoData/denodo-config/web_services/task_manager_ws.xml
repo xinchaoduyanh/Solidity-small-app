@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web_service>
+    <name>task_manager_ws</name>
+    <description>REST API cho Task Manager - Quản lý nhiệm vụ và danh mục</description>
+    
+    <!-- Categories Endpoints -->
+    <resource>
+        <name>categories</name>
+        <description>Quản lý danh mục nhiệm vụ</description>
+        <path>/api/categories</path>
+        <method>GET</method>
+        <view>categories_view</view>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+        <cors_origins>*</cors_origins>
+        <cors_methods>GET,POST,PUT,DELETE</cors_methods>
+        <cors_headers>Content-Type,Authorization</cors_headers>
+    </resource>
+    
+    <resource>
+        <name>category_by_id</name>
+        <description>Lấy danh mục theo ID</description>
+        <path>/api/categories/{id}</path>
+        <method>GET</method>
+        <view>categories_view</view>
+        <parameter>
+            <name>id</name>
+            <type>INTEGER</type>
+            <required>true</required>
+        </parameter>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <!-- Tasks Endpoints -->
+    <resource>
+        <name>tasks</name>
+        <description>Quản lý nhiệm vụ</description>
+        <path>/api/tasks</path>
+        <method>GET</method>
+        <view>tasks_view</view>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+        <cors_origins>*</cors_origins>
+        <cors_methods>GET,POST,PUT,DELETE</cors_methods>
+        <cors_headers>Content-Type,Authorization</cors_headers>
+    </resource>
+    
+    <resource>
+        <name>task_by_id</name>
+        <description>Lấy nhiệm vụ theo ID</description>
+        <path>/api/tasks/{id}</path>
+        <method>GET</method>
+        <view>tasks_view</view>
+        <parameter>
+            <name>id</name>
+            <type>INTEGER</type>
+            <required>true</required>
+        </parameter>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <resource>
+        <name>tasks_by_category</name>
+        <description>Lấy nhiệm vụ theo danh mục</description>
+        <path>/api/categories/{id}/tasks</path>
+        <method>GET</method>
+        <view>tasks_view</view>
+        <parameter>
+            <name>id</name>
+            <type>INTEGER</type>
+            <required>true</required>
+        </parameter>
+        <filter>category_id = {id}</filter>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <!-- Enhanced Views Endpoints -->
+    <resource>
+        <name>tasks_with_categories</name>
+        <description>Lấy nhiệm vụ kèm thông tin danh mục</description>
+        <path>/api/tasks-with-categories</path>
+        <method>GET</method>
+        <view>tasks_with_categories_view</view>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <!-- Statistics Endpoints -->
+    <resource>
+        <name>category_stats</name>
+        <description>Thống kê theo danh mục</description>
+        <path>/api/statistics/categories</path>
+        <method>GET</method>
+        <view>category_stats_view</view>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <resource>
+        <name>priority_stats</name>
+        <description>Thống kê theo độ ưu tiên</description>
+        <path>/api/statistics/priority</path>
+        <method>GET</method>
+        <view>priority_stats_view</view>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <resource>
+        <name>daily_stats</name>
+        <description>Thống kê theo ngày</description>
+        <path>/api/statistics/daily</path>
+        <method>GET</method>
+        <view>daily_tasks_view</view>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <!-- Health Check Endpoint -->
+    <resource>
+        <name>health_check</name>
+        <description>Kiểm tra trạng thái API</description>
+        <path>/api/health</path>
+        <method>GET</method>
+        <view>categories_view</view>
+        <limit>1</limit>
+        <response_format>JSON</response_format>
+        <cors_enabled>true</cors_enabled>
+    </resource>
+    
+    <!-- Global Configuration -->
+    <global_config>
+        <authentication>none</authentication>
+        <rate_limiting>1000</rate_limiting>
+        <timeout>30000</timeout>
+        <compression>true</compression>
+        <logging>true</logging>
+        <error_handling>detailed</error_handling>
+    </global_config>
+</web_service>
