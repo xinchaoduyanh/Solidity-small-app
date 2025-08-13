@@ -1,12 +1,13 @@
 "use client";
 
 import { useTasks } from "@/hooks/useTasks";
-import { useMetaMask } from "@/hooks/useMetaMask";
+import { useWallet } from "@/contexts/WalletContext";
 import TaskItem from "./TaskItem";
+import { CATEGORIES, APP_CONFIG } from "@/constants";
 import type { Task } from "@/types/task";
 
 export default function TaskList() {
-  const { isConnected } = useMetaMask();
+  const { isConnected } = useWallet();
   const { tasks, isLoading, error } = useTasks();
 
   if (!isConnected) {
@@ -31,7 +32,7 @@ export default function TaskList() {
   if (isLoading) {
     return (
       <div className="space-y-3">
-        {[...Array(3)].map((_, i) => (
+        {[...Array(APP_CONFIG.UI.SKELETON_ITEMS)].map((_, i) => (
           <div key={i} className="animate-pulse">
             <div className="h-16 bg-muted rounded-md"></div>
           </div>
@@ -54,7 +55,7 @@ export default function TaskList() {
   return (
     <div className="space-y-3">
       {tasks.map((task: Task) => (
-        <TaskItem key={task.id} task={task} />
+        <TaskItem key={task.id} task={task} categories={CATEGORIES} />
       ))}
     </div>
   );

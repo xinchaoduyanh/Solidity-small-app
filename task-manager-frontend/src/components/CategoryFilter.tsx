@@ -22,7 +22,13 @@ export default function CategoryFilter({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 dark:shadow-indigo-400/30">
+        <div
+          className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 dark:shadow-indigo-400/30"
+          style={{
+            transform: "translateZ(0)",
+            willChange: "transform",
+          }}
+        >
           <svg
             className="w-5 h-5 text-white"
             fill="none"
@@ -50,11 +56,15 @@ export default function CategoryFilter({
       <div className="flex flex-wrap gap-3">
         <button
           onClick={() => handleFilterChange(null)}
-          className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
+          className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
             selectedCategory === null
-              ? "bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white shadow-xl shadow-blue-500/30"
-              : "bg-card/70 backdrop-blur-sm text-foreground hover:bg-card hover:shadow-lg border border-border/50"
+              ? "bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white shadow-lg shadow-blue-500/30"
+              : "bg-card/70 backdrop-blur-sm text-foreground hover:bg-card hover:shadow-md border border-border/50"
           }`}
+          style={{
+            transform: "translateZ(0)",
+            willChange: "transform",
+          }}
         >
           <span className="relative z-10 flex items-center gap-2">
             <svg
@@ -73,7 +83,13 @@ export default function CategoryFilter({
             All Categories
           </span>
           {selectedCategory === null && (
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:block"
+              style={{
+                transform: "translateZ(0)",
+                willChange: "opacity",
+              }}
+            />
           )}
         </button>
 
@@ -81,13 +97,15 @@ export default function CategoryFilter({
           <button
             key={category.id}
             onClick={() => handleFilterChange(category.id)}
-            className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
+            className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
               selectedCategory === category.id
-                ? "bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white shadow-xl shadow-purple-500/30"
-                : "bg-card/70 backdrop-blur-sm text-foreground hover:bg-card hover:shadow-lg border border-border/50"
+                ? "bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white shadow-lg shadow-purple-500/30"
+                : "bg-card/70 backdrop-blur-sm text-foreground hover:bg-card hover:shadow-md border border-border/50"
             }`}
             style={{
               animationDelay: `${index * 50}ms`,
+              transform: "translateZ(0)",
+              willChange: "transform",
             }}
           >
             <span className="relative z-10 flex items-center gap-2">

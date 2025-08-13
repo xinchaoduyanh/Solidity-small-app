@@ -2,51 +2,65 @@
 
 import useSWR, { mutate } from "swr";
 import { useState } from "react";
-import { getWeb3 } from "@/lib/web3";
 import { getTaskManagerContract } from "@/lib/contract";
+import {
+  getWalletAccount,
+  getContractInstance,
+  estimateAndSendTransaction,
+} from "@/lib/utils/blockchain";
+import { APP_CONFIG, ERROR_MESSAGES } from "@/constants/app";
 import type { Task } from "@/types/task";
-
-const TASKS_CACHE_KEY = "tasks";
 
 export function useTasks() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { data: tasks = [], isLoading: isLoadingTasks } = useSWR(
-    TASKS_CACHE_KEY,
+    APP_CONFIG.CACHE.TASKS_KEY,
     async () => {
       try {
         if (typeof window === "undefined") {
           return [];
         }
 
-        const contract = getTaskManagerContract();
-        if (!contract) {
-          throw new Error(
-            "Contract not available. Please check your network and contract configuration."
-          );
-        }
+        const contract = getContractInstance();
+        const taskCountBigInt = await contract.methods.taskCount().call();
 
-        const taskCount = await contract.methods.taskCount().call();
-        const tasks = [];
+        // ✅ FIX: Convert BigInt to number safely
+        const taskCount = Number(taskCountBigInt);
 
-        for (let i = 1; i <= taskCount; i++) {
-          try {
-            const task = await contract.methods.tasks(i - 1).call();
-            if (task.owner !== "0x0000000000000000000000000000000000000000") {
-              tasks.push({
-                id: i,
-                title: task.title,
-                categoryId: Number(task.categoryId),
-                completed: task.completed,
-                owner: task.owner,
-              });
+        if (taskCount === 0) return [];
+
+        // Parallel fetching instead of sequential for better performance
+        const taskPromises = Array.from({ length: taskCount }, (_, i) =>
+          contract.methods
+            .tasks(i)
+            .call()
+            .catch((err: any) => {
+              console.warn(`Failed to fetch task ${i + 1}:`, err);
+              return null;
+            })
+        );
+
+        const results = await Promise.allSettled(taskPromises);
+        const tasks: Task[] = results
+          .map((result, index) => {
+            if (result.status === "fulfilled" && result.value) {
+              const task = result.value;
+              // Only include valid tasks (not empty owner)
+              if (task.owner !== "0x0000000000000000000000000000000000000000") {
+                return {
+                  id: index + 1,
+                  title: task.title,
+                  categoryId: Number(task.categoryId),
+                  completed: task.completed,
+                  owner: task.owner,
+                };
+              }
             }
-          } catch (error) {
-            console.warn(`Failed to fetch task ${i}:`, error);
-            continue;
-          }
-        }
+            return null;
+          })
+          .filter((task): task is Task => task !== null);
 
         return tasks;
       } catch (error: any) {
@@ -55,9 +69,9 @@ export function useTasks() {
       }
     },
     {
-      refreshInterval: 10000, // Refresh every 10 seconds
+      refreshInterval: APP_CONFIG.BLOCKCHAIN.REFRESH_INTERVAL,
       revalidateOnFocus: true,
-      errorRetryCount: 3,
+      errorRetryCount: APP_CONFIG.BLOCKCHAIN.MAX_RETRY_COUNT,
     }
   );
 
@@ -69,44 +83,19 @@ export function useTasks() {
       setIsLoading(true);
       setError(null);
 
-      if (typeof window === "undefined") {
-        throw new Error("Cannot create task on server side");
-      }
+      const account = await getWalletAccount();
+      const contract = getContractInstance();
 
-      const web3 = getWeb3();
-      if (!web3) {
-        throw new Error("Web3 not available");
-      }
-
-      const accounts = await web3.eth.getAccounts();
-      if (accounts.length === 0) {
-        throw new Error("No wallet connected");
-      }
-
-      const contract = getTaskManagerContract();
-      if (!contract) {
-        throw new Error(
-          "Contract not available. Please check your network and contract configuration."
-        );
-      }
-
-      const gasEstimate = await contract.methods
-        .createTask(title, BigInt(categoryId))
-        .estimateGas({ from: accounts[0] });
-
-      const result = await contract.methods
-        .createTask(title, BigInt(categoryId))
-        .send({
-          from: accounts[0],
-          gas: Math.floor(Number(gasEstimate) * 1.2),
-        });
+      const method = contract.methods.createTask(title, BigInt(categoryId));
+      const transactionHash = await estimateAndSendTransaction(method, account);
 
       // Refresh tasks after creation
-      await mutate(TASKS_CACHE_KEY);
+      await mutate(APP_CONFIG.CACHE.TASKS_KEY);
 
-      return result.transactionHash;
+      return transactionHash;
     } catch (error: any) {
-      setError(error.message || "Failed to create task");
+      const errorMessage = error.message || ERROR_MESSAGES.TASKS.CREATE_FAILED;
+      setError(errorMessage);
       throw error;
     } finally {
       setIsLoading(false);
@@ -118,42 +107,20 @@ export function useTasks() {
       setIsLoading(true);
       setError(null);
 
-      if (typeof window === "undefined") {
-        throw new Error("Cannot complete task on server side");
-      }
+      const account = await getWalletAccount();
+      const contract = getContractInstance();
 
-      const web3 = getWeb3();
-      if (!web3) {
-        throw new Error("Web3 not available");
-      }
-
-      const accounts = await web3.eth.getAccounts();
-      if (accounts.length === 0) {
-        throw new Error("No wallet connected");
-      }
-
-      const contract = getTaskManagerContract();
-      if (!contract) {
-        throw new Error(
-          "Contract not available. Please check your network and contract configuration."
-        );
-      }
-
-      const gasEstimate = await contract.methods
-        .completeTask(BigInt(taskId))
-        .estimateGas({ from: accounts[0] });
-
-      const result = await contract.methods.completeTask(BigInt(taskId)).send({
-        from: accounts[0],
-        gas: Math.floor(Number(gasEstimate) * 1.2),
-      });
+      const method = contract.methods.completeTask(BigInt(taskId));
+      const transactionHash = await estimateAndSendTransaction(method, account);
 
       // Refresh tasks after completion
-      await mutate(TASKS_CACHE_KEY);
+      await mutate(APP_CONFIG.CACHE.TASKS_KEY);
 
-      return result.transactionHash;
+      return transactionHash;
     } catch (error: any) {
-      setError(error.message || "Failed to complete task");
+      const errorMessage =
+        error.message || ERROR_MESSAGES.TASKS.COMPLETE_FAILED;
+      setError(errorMessage);
       throw error;
     } finally {
       setIsLoading(false);
@@ -161,7 +128,7 @@ export function useTasks() {
   };
 
   const refreshTasks = () => {
-    mutate(TASKS_CACHE_KEY);
+    mutate(APP_CONFIG.CACHE.TASKS_KEY);
   };
 
   return {

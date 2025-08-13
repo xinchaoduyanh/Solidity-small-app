@@ -4,17 +4,17 @@ import type { Task } from "@/types/task";
 import { useTasks } from "@/hooks/useTasks";
 import { Button } from "@/ui/button";
 import { Badge } from "@/ui/badge";
+import { Category } from "@/types/category";
+import { formatAddress, getStatusColor } from "@/lib/utils/ui";
+import { getCategoryName } from "@/constants";
 
 interface TaskItemProps {
   task: Task;
+  categories: Category[];
 }
 
-export default function TaskItem({ task }: TaskItemProps) {
+export default function TaskItem({ task, categories }: TaskItemProps) {
   const { completeTask } = useTasks();
-
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
 
   const handleComplete = async () => {
     try {
@@ -39,14 +39,16 @@ export default function TaskItem({ task }: TaskItemProps) {
           </h4>
 
           <div className="flex items-center gap-2 mt-2">
-            <Badge className="text-xs">Category {task.categoryId}</Badge>
+            <Badge className="text-xs">
+              {getCategoryName(task.categoryId)}
+            </Badge>
 
             <span className="text-xs text-muted-foreground">
               by {formatAddress(task.owner)}
             </span>
 
             {task.completed && (
-              <Badge className="text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+              <Badge className={`text-xs ${getStatusColor("completed")}`}>
                 Completed
               </Badge>
             )}

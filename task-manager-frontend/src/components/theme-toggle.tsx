@@ -28,9 +28,25 @@ export function ThemeToggle() {
       size="icon"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
       className="w-9 h-9 hover:bg-accent/50 transition-colors duration-200"
+      style={{
+        transform: "translateZ(0)",
+        willChange: "transform",
+      }}
     >
-      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <Sun
+        className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+        style={{
+          transform: "translateZ(0)",
+          willChange: "transform",
+        }}
+      />
+      <Moon
+        className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+        style={{
+          transform: "translateZ(0)",
+          willChange: "transform",
+        }}
+      />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

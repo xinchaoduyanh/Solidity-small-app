@@ -1,8 +1,9 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
+import { ClientThemeProvider } from "@/components/ClientThemeProvider";
+import { WalletProvider } from "@/contexts/WalletContext";
 import "../src/styles/globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,20 +29,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable}`}
-      suppressHydrationWarning
-    >
-      <body className={`${inter.className} antialiased`}>
-        <ThemeProvider
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+      <body
+        className={`${inter.className} antialiased`}
+        suppressHydrationWarning={true}
+      >
+        <ClientThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-        </ThemeProvider>
+          <WalletProvider>{children}</WalletProvider>
+        </ClientThemeProvider>
       </body>
     </html>
   );
