@@ -391,9 +391,6 @@ export default function AddTaskForm({ categories }: AddTaskFormProps) {
                                 <div className="font-medium text-slate-900 dark:text-slate-100">
                                   {category.name}
                                 </div>
-                                <div className="text-xs text-slate-500 dark:text-slate-400">
-                                  Category {category.id}
-                                </div>
                               </div>
                               {category.id === categoryId && (
                                 <Check className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
