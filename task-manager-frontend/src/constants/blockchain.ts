@@ -6,16 +6,19 @@ export const BLOCKCHAIN_CONFIG = {
 
   // Gas settings
   GAS: {
-    DEFAULT_LIMIT: 300000,
-    MULTIPLIER: 1.2,
-    MAX_PRIORITY_FEE: "2000000000", // 2 gwei
+    DEFAULT_LIMIT: parseInt(
+      process.env.NEXT_PUBLIC_DEFAULT_GAS_LIMIT || "200000"
+    ),
+    MULTIPLIER: 1.1, // Giảm từ 1.2 xuống 1.1
+    MAX_PRIORITY_FEE: "1000000000", // 1 gwei (tối thiểu)
+    DEFAULT_PRICE: process.env.NEXT_PUBLIC_DEFAULT_GAS_PRICE || "10000000000", // 10 gwei
   },
 
   // Transaction settings
   TRANSACTION: {
-    CONFIRMATION_BLOCKS: 1,
-    TIMEOUT_SECONDS: 300, // 5 minutes
-    MAX_RETRIES: 3,
+    CONFIRMATION_BLOCKS: 1, // Giảm từ 2 xuống 1 (tối thiểu)
+    TIMEOUT_SECONDS: 180, // Giảm từ 300 xuống 180 (3 phút)
+    MAX_RETRIES: 2, // Giảm từ 3 xuống 2
   },
 
   // Network settings
@@ -27,10 +30,14 @@ export const BLOCKCHAIN_CONFIG = {
       blockExplorer: "",
     },
     SEPOLIA: {
-      chainId: "0xaa36a7",
+      chainId: "0xaa36a7", // 11155111 in hex
       name: "Sepolia Testnet",
-      rpcUrl: "https://sepolia.infura.io/v3/",
-      blockExplorer: "https://sepolia.etherscan.io",
+      rpcUrl:
+        process.env.NEXT_PUBLIC_INFURA_SEPOLIA_URL ||
+        "https://sepolia.infura.io/v3/",
+      blockExplorer:
+        process.env.NEXT_PUBLIC_BLOCK_EXPLORER ||
+        "https://sepolia.etherscan.io",
     },
   },
 } as const;

@@ -1,10 +1,10 @@
-# 🚀 Hướng Dẫn Chạy Dự Án Task Manager
+# 🚀 Hướng Dẫn Chạy Dự Án Task Manager trên Sepolia Testnet
 
 Dự án này bao gồm 3 thành phần chính:
 
-1. **Blockchain Smart Contract** (Solidity + Truffle)
+1. **Blockchain Smart Contract** (Solidity + Truffle) - Deploy trên Sepolia
 2. **Backend API** (NestJS + TypeScript)
-3. **Frontend** (Next.js + React)
+3. **Frontend** (Next.js + React) - Kết nối với Sepolia
 
 ## 📋 Yêu Cầu Hệ Thống
 
@@ -12,6 +12,30 @@ Dự án này bao gồm 3 thành phần chính:
 - **npm** hoặc **pnpm**
 - **MetaMask** extension cho trình duyệt
 - **Git**
+- **Ví MetaMask** với Sepolia ETH (có thể lấy từ faucet)
+
+## 🎯 Chuẩn Bị Sepolia Testnet
+
+### 1. Lấy Sepolia ETH (Testnet)
+
+- **Faucet Alchemy**: https://sepoliafaucet.com/
+- **Faucet Chainlink**: https://faucet.sepolia.dev/
+- **Cần khoảng**: 0.01-0.1 ETH để test
+
+### 2. Lấy Infura Project ID
+
+- Đăng ký tại: https://infura.io
+- Tạo project mới → "Create New Project"
+- Chọn "Web3 API" → "Create"
+- Vào project → "Settings" → "Keys"
+- Copy "PROJECT ID"
+
+### 3. Lấy MetaMask Mnemonic
+
+- Mở MetaMask → 3 dấu gạch → "Settings"
+- "Security & Privacy" → "Reveal Seed Words"
+- Nhập password → Copy 12 từ khóa
+- **QUAN TRỌNG**: Giữ bí mật, không chia sẻ!
 
 ## 🏗️ Cài Đặt Dependencies
 
@@ -40,40 +64,61 @@ pnpm install
 
 ## 🚀 Khởi Chạy Dự Án
 
-### Bước 1: Khởi động Ganache (Blockchain Local)
+### Bước 1: Setup Blockchain Contract cho Sepolia
 
-Mở terminal mới và chạy:
-
-```bash
-ganache-cli --port 7545
-```
-
-**Lưu ý**: Nếu chưa cài ganache-cli, hãy cài đặt:
-
-```bash
-npm install -g ganache-cli
-```
-
-Ganache sẽ chạy trên `http://127.0.0.1:7545` và cung cấp 10 tài khoản test với 1000 ETH mỗi tài khoản.
-
-### Bước 2: Deploy Smart Contract
-
-Mở terminal mới và chạy:
+Mở terminal và chạy:
 
 ```bash
 cd blockchain-contract
-npm run deploy
-
-còn restart thì chạy truffle migrate --reset --compile-all
+.\scripts\setup-sepolia.ps1
 ```
 
 **Kết quả mong đợi**:
 
-- Contract được compile thành công
-- Contract được deploy tại địa chỉ: `0x......`
-- Network ID: 1337
+- Dependencies được cài đặt
+- File .env được tạo
+- Contracts được compile thành công
 
-### Bước 3: Khởi động Backend API
+### Bước 2: Cấu hình file .env
+
+Sau khi chạy setup script, cập nhật file `blockchain-contract/.env`:
+
+```bash
+# Thay thế các giá trị dưới đây
+MNEMONIC=your_twelve_word_mnemonic_phrase_here
+PROJECT_ID=f329147ecd0349008e4d62d89f25186b
+```
+
+### Bước 3: Deploy Smart Contract lên Sepolia
+
+```bash
+cd blockchain-contract
+npm run deploy:sepolia
+```
+
+**Kết quả mong đợi**:
+
+- Contract được deploy thành công
+- Contract address mới: `0x......`
+- Network: Sepolia Testnet (Chain ID: 11155111)
+
+### Bước 4: Cập nhật Frontend Environment
+
+Cập nhật file `task-manager-frontend/.env.local`:
+
+```bash
+# Cập nhật địa chỉ contract mới
+NEXT_PUBLIC_TASK_MANAGER_ADDRESS=0x... # Địa chỉ contract thực tế
+NEXT_PUBLIC_CONTRACT_ADDRESS=0x... # Địa chỉ contract thực tế
+
+# Các cấu hình khác đã có sẵn
+NEXT_PUBLIC_CHAIN_ID=11155111
+NEXT_PUBLIC_NETWORK_NAME=Sepolia
+NEXT_PUBLIC_NETWORK_RPC=https://sepolia.infura.io/v3/f329147ecd0349008e4d62d89f25186b
+NEXT_PUBLIC_BLOCK_EXPLORER=https://sepolia.etherscan.io
+```
+
+### Bước 5: Khởi động Backend API
 
 Mở terminal mới và chạy:
 
@@ -88,7 +133,7 @@ npm start
 - API được build thành công
 - Server khởi động (thường trên port 3000 hoặc 3001)
 
-### Bước 4: Khởi động Frontend
+### Bước 6: Khởi động Frontend
 
 Mở terminal mới và chạy:
 
@@ -103,15 +148,14 @@ npm start
 - Frontend được build thành công
 - Server khởi động trên `http://localhost:3000`
 
-## 🔗 Kết Nối MetaMask
+## 🔗 Kết Nối MetaMask với Sepolia
 
 1. **Mở MetaMask** trong trình duyệt
-2. **Thêm mạng mới**:
-   - Network Name: `Local Ganache`
-   - RPC URL: `http://127.0.0.1:7545`
-   - Chain ID: `1337`
-   - Currency Symbol: `ETH`
-3. **Import tài khoản test** từ Ganache (sử dụng private key)
+2. **Chuyển sang Sepolia Testnet**:
+   - Click vào network dropdown
+   - Chọn "Sepolia test network"
+   - Chain ID: 11155111
+3. **Đảm bảo có Sepolia ETH** trong ví
 
 ## 📱 Sử Dụng Ứng Dụng
 
@@ -119,52 +163,64 @@ npm start
 2. **Kết nối ví**: Click "Connect Wallet" và chọn MetaMask
 3. **Tạo task**: Sử dụng form để tạo task mới
 4. **Quản lý task**: Xem, cập nhật, xóa task
+5. **Kiểm tra transaction**: Xem trên https://sepolia.etherscan.io
 
 ## 🐛 Xử Lý Lỗi Thường Gặp
 
-### Lỗi 1: Không thể kết nối Ganache
+### Lỗi 1: Không thể deploy lên Sepolia
 
 ```
-CONNECTION ERROR: Couldn't connect to node http://127.0.0.1:7545
+Error: insufficient funds for gas * price + value
 ```
 
-**Giải pháp**: Đảm bảo Ganache đang chạy trên port 7545
+**Giải pháp**:
 
-### Lỗi 2: Frontend build thất bại
+- Kiểm tra số dư Sepolia ETH
+- Sử dụng faucet để lấy thêm ETH
+- Giảm gas limit/price nếu cần
 
-```
-Module not found: Can't resolve '@/lib/web3'
-```
-
-**Giải pháp**: Đã được sửa trong code, sử dụng relative path
-
-### Lỗi 3: API không tìm thấy file build
+### Lỗi 2: Wrong network
 
 ```
-Error: Cannot find module 'dist/main.js'
+Error: MetaMask is not connected to Sepolia
 ```
 
-**Giải pháp**: Chạy `npm run build` trước khi `npm start`
+**Giải pháp**:
 
-### Lỗi 4: Frontend không có production build
+- Chuyển MetaMask sang Sepolia testnet
+- Chain ID phải là 11155111
+
+### Lỗi 3: Contract not found
 
 ```
-Could not find a production build in the '.next' directory
+Error: Contract not found at address
 ```
 
-**Giải pháp**: Chạy `npm run build` trước khi `npm start`
+**Giải pháp**:
+
+- Kiểm tra địa chỉ contract trong .env.local
+- Đảm bảo contract đã được deploy thành công
+
+### Lỗi 4: Gas estimation failed
+
+```
+Error: gas estimation failed
+```
+
+**Giải pháp**:
+
+- Tăng gas limit
+- Kiểm tra logic contract
+- Đảm bảo có đủ Sepolia ETH
 
 ## 📊 Kiểm Tra Trạng Thái
 
-### Ganache
+### Smart Contract trên Sepolia
 
-- Terminal hiển thị 10 tài khoản với 1000 ETH
-- RPC server đang lắng nghe trên port 7545
-
-### Smart Contract
-
-- Contract address: `0xD562f17B55EDc0693346f931a713127248F1A753`
-- Network ID: 1337
+- Contract address: `0x......` (sau khi deploy)
+- Network: Sepolia Testnet
+- Chain ID: 11155111
+- Block Explorer: https://sepolia.etherscan.io
 
 ### API
 
@@ -175,6 +231,7 @@ Could not find a production build in the '.next' directory
 
 - Server đang chạy trên `http://localhost:3000`
 - Build thành công trong thư mục `.next/`
+- Kết nối với Sepolia testnet
 
 ## 🔄 Quy Trình Phát Triển
 
@@ -182,7 +239,7 @@ Could not find a production build in the '.next' directory
 
    ```bash
    cd blockchain-contract
-   npm run deploy
+   npm run deploy:sepolia
    ```
 
 2. **Thay đổi API**:
@@ -205,27 +262,32 @@ Could not find a production build in the '.next' directory
 ```
 small-app/
 ├── blockchain-contract/     # Smart Contract (Solidity + Truffle)
+│   ├── scripts/            # Scripts setup và deploy
+│   └── .env               # Cấu hình blockchain
 ├── task-manager-api/        # Backend API (NestJS)
 ├── task-manager-frontend/   # Frontend (Next.js)
+│   └── .env.local         # Cấu hình frontend
 └── DenodoData/              # Cấu hình Denodo (tùy chọn)
 ```
 
 ## 🎯 Lưu Ý Quan Trọng
 
-- **Luôn khởi động Ganache trước** khi deploy smart contract
-- **Build trước khi start** cho cả API và Frontend
-- **Kiểm tra port** để tránh xung đột
-- **Sử dụng MetaMask** để tương tác với blockchain
+- **Luôn deploy contract trước** khi khởi động frontend
+- **Cập nhật địa chỉ contract** trong frontend sau khi deploy
+- **Sử dụng Sepolia testnet** thay vì Ganache
+- **Kiểm tra gas fees** trước khi thực hiện transaction
+- **Backup mnemonic** an toàn
 
 ## 🆘 Hỗ Trợ
 
 Nếu gặp vấn đề:
 
 1. Kiểm tra tất cả terminal đang chạy
-2. Đảm bảo Ganache đang hoạt động
-3. Kiểm tra log lỗi trong terminal
-4. Restart các service nếu cần thiết
+2. Đảm bảo MetaMask đang ở Sepolia testnet
+3. Kiểm tra số dư Sepolia ETH
+4. Xem transaction logs trên Sepolia Etherscan
+5. Kiểm tra log lỗi trong terminal
 
 ---
 
-**Chúc bạn thành công với dự án Task Manager! 🎉**
+**Chúc bạn thành công với dự án Task Manager trên Sepolia Testnet! 🎉**
