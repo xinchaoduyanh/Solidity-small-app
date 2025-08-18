@@ -9,8 +9,8 @@ export const BLOCKCHAIN_CONFIG = {
     DEFAULT_LIMIT: parseInt(
       process.env.NEXT_PUBLIC_DEFAULT_GAS_LIMIT || "200000"
     ),
-    MULTIPLIER: 1.1, // Giảm từ 1.2 xuống 1.1
-    MAX_PRIORITY_FEE: "1000000000", // 1 gwei (tối thiểu)
+    MULTIPLIER: parseFloat(process.env.NEXT_PUBLIC_GAS_MULTIPLIER || "1.1"),
+    MAX_PRIORITY_FEE: process.env.NEXT_PUBLIC_MAX_PRIORITY_FEE || "1000000000", // 1 gwei (tối thiểu)
     DEFAULT_PRICE: process.env.NEXT_PUBLIC_DEFAULT_GAS_PRICE || "10000000000", // 10 gwei
   },
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Category } from "@/types/category";
+import { Plus, CheckCircle } from "lucide-react";
 
 interface CategoryFilterProps {
   categories: Category[];
@@ -18,6 +19,10 @@ export default function CategoryFilter({
     setSelectedCategory(categoryId);
     onFilterChange?.(categoryId);
   };
+
+  const selectedCategoryData = categories.find(
+    (cat) => cat.id === selectedCategory
+  );
 
   return (
     <div className="space-y-4">
@@ -92,6 +97,29 @@ export default function CategoryFilter({
           </button>
         ))}
       </div>
+
+      {/* Category Selection Message */}
+      {selectedCategoryData && (
+        <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-800 rounded-xl">
+          <div className="flex items-start space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <CheckCircle className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-semibold text-purple-900 dark:text-purple-100 mb-1">
+                Category Selected: {selectedCategoryData.name}
+              </h4>
+              <p className="text-sm text-purple-700 dark:text-purple-300 mb-3">
+                {selectedCategoryData.description}
+              </p>
+              <div className="flex items-center space-x-2 text-xs text-purple-600 dark:text-purple-400">
+                <Plus className="w-4 h-4" />
+                <span>You can now create tasks in this category</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {categories.length === 0 && (
         <div className="text-center py-8 animate-in fade-in-50 duration-500">

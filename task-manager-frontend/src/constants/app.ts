@@ -4,7 +4,7 @@ export const APP_CONFIG = {
   // Blockchain
   BLOCKCHAIN: {
     REFRESH_INTERVAL: 10000, // 10 seconds
-    GAS_MULTIPLIER: 1.2,
+    GAS_MULTIPLIER: parseFloat(process.env.NEXT_PUBLIC_GAS_MULTIPLIER || "1.2"),
     MAX_RETRY_COUNT: 3,
   },
 

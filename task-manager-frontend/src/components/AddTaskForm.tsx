@@ -391,6 +391,9 @@ export default function AddTaskForm({ categories }: AddTaskFormProps) {
                                 <div className="font-medium text-slate-900 dark:text-slate-100">
                                   {category.name}
                                 </div>
+                                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                                  {category.description}
+                                </div>
                               </div>
                               {category.id === categoryId && (
                                 <Check className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
@@ -402,25 +405,43 @@ export default function AddTaskForm({ categories }: AddTaskFormProps) {
                     )}
                   </div>
 
-                  {/* Category Preview */}
+                  {/* Enhanced Category Preview */}
                   {selectedCategory && (
-                    <div className="mt-3 p-3 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
-                      <div className="flex items-center space-x-3">
+                    <div className="mt-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                      <div className="flex items-start space-x-3">
                         <div
-                          className={`w-8 h-8 rounded-lg bg-gradient-to-r ${getCategoryColor(
+                          className={`w-10 h-10 rounded-lg bg-gradient-to-r ${getCategoryColor(
                             selectedCategory.id
-                          )} flex items-center justify-center`}
+                          )} flex items-center justify-center flex-shrink-0`}
                         >
                           <span className="text-white text-sm font-bold">
                             {selectedCategory.name.charAt(0).toUpperCase()}
                           </span>
                         </div>
-                        <div>
-                          <div className="font-medium text-purple-900 dark:text-purple-100">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-green-900 dark:text-green-100 mb-1">
                             {selectedCategory.name}
                           </div>
-                          <div className="text-xs text-purple-600 dark:text-purple-400">
-                            Ready to create tasks in this category
+                          <div className="text-sm text-green-700 dark:text-green-300 mb-2">
+                            {selectedCategory.description}
+                          </div>
+                          <div className="flex items-center space-x-2 text-xs text-green-600 dark:text-green-400">
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
+                            </svg>
+                            <span className="font-medium">
+                              Ready to create tasks in this category!
+                            </span>
                           </div>
                         </div>
                       </div>

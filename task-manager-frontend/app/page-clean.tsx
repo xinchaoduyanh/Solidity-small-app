@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { Category } from "@/types/category";
+import { CATEGORIES } from "@/constants/categories";
 import CategoryFilter from "@/components/CategoryFilter";
 import TransactionToast from "@/components/TransactionToast";
 import {
@@ -11,36 +12,11 @@ import {
 } from "./components/ClientComponents";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-async function getCategories(): Promise<Category[]> {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`,
-      {
-        next: { revalidate: 300 },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error("Failed to fetch categories:", error);
-    return [];
-  }
-}
-
 export default function HomePageClean() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories] = useState<Category[]>(CATEGORIES);
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<
     number | null
   >(null);
-
-  // Load categories on component mount
-  useEffect(() => {
-    getCategories().then(setCategories);
-  }, []);
 
   const handleFilterChange = (categoryId: number | null) => {
     setSelectedCategoryFilter(categoryId);
@@ -55,7 +31,7 @@ export default function HomePageClean() {
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 dark:bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
                 <svg
-                  className="w-5 h-5 sm:w-7 sm:h-7 text-white"
+                  className="w-5 h-5 sm:w-7 sm:w-7 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

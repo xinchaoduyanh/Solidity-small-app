@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import TaskManagerABI from "@/contracts/TaskManager.json";
+import { BLOCKCHAIN_CONFIG } from "@/constants/blockchain";
 
 // Extend Window interface to include ethereum
 declare global {
@@ -71,7 +72,12 @@ export class ContractService {
 
       const result = await this.contract.methods
         .createTask(title, BigInt(categoryId))
-        .send({ from, gas: Math.floor(Number(gasEstimate) * 1.2) });
+        .send({
+          from,
+          gas: Math.floor(
+            Number(gasEstimate) * BLOCKCHAIN_CONFIG.GAS.MULTIPLIER
+          ),
+        });
 
       return result.transactionHash;
     } catch (error) {
@@ -88,7 +94,12 @@ export class ContractService {
 
       const result = await this.contract.methods
         .completeTask(BigInt(taskId))
-        .send({ from, gas: Math.floor(Number(gasEstimate) * 1.2) });
+        .send({
+          from,
+          gas: Math.floor(
+            Number(gasEstimate) * BLOCKCHAIN_CONFIG.GAS.MULTIPLIER
+          ),
+        });
 
       return result.transactionHash;
     } catch (error) {

@@ -1,4 +1,5 @@
 import type { Category } from "@/types/category";
+import { CATEGORIES } from "@/constants/categories";
 import { WalletProvider } from "@/contexts/WalletContext";
 import { WalletErrorBoundary } from "@/components/WalletErrorBoundary";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -11,28 +12,8 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Suspense } from "react";
 
-async function getCategories(): Promise<Category[]> {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/categories`,
-      {
-        next: { revalidate: 300 },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error("Failed to fetch categories:", error);
-    return [];
-  }
-}
-
 export default async function HomePageWithBackground() {
-  const categories = await getCategories();
+  const categories = CATEGORIES;
 
   console.log("Categories loaded:", categories);
   console.log("Rendering HomePage with background:", categories.length);
