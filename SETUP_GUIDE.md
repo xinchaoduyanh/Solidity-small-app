@@ -86,7 +86,7 @@ Sau khi chạy setup script, cập nhật file `blockchain-contract/.env`:
 ```bash
 # Thay thế các giá trị dưới đây
 MNEMONIC=your_twelve_word_mnemonic_phrase_here
-PROJECT_ID=f329147ecd0349008e4d62d89f25186b
+PROJECT_ID=your_infura_project_id_here
 ```
 
 ### Bước 3: Deploy Smart Contract lên Sepolia
@@ -114,7 +114,7 @@ NEXT_PUBLIC_CONTRACT_ADDRESS=0x... # Địa chỉ contract thực tế
 # Các cấu hình khác đã có sẵn
 NEXT_PUBLIC_CHAIN_ID=11155111
 NEXT_PUBLIC_NETWORK_NAME=Sepolia
-NEXT_PUBLIC_NETWORK_RPC=https://sepolia.infura.io/v3/f329147ecd0349008e4d62d89f25186b
+NEXT_PUBLIC_NETWORK_RPC=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
 NEXT_PUBLIC_BLOCK_EXPLORER=https://sepolia.etherscan.io
 ```
 
