@@ -44,3 +44,5 @@ coverage/
 # Blockchain specific
 /build/contracts/
 /truffle-config.js
+
+nestjs.rules.cmd

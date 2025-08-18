@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import type { Category } from "@/types/category";
 import CategoryFilter from "@/components/CategoryFilter";
 import TransactionToast from "@/components/TransactionToast";
@@ -28,11 +31,20 @@ async function getCategories(): Promise<Category[]> {
   }
 }
 
-export default async function HomePageClean() {
-  const categories = await getCategories();
+export default function HomePageClean() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<
+    number | null
+  >(null);
 
-  console.log("Categories loaded:", categories);
-  console.log("Rendering HomePage clean version:", categories.length);
+  // Load categories on component mount
+  useEffect(() => {
+    getCategories().then(setCategories);
+  }, []);
+
+  const handleFilterChange = (categoryId: number | null) => {
+    setSelectedCategoryFilter(categoryId);
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -124,11 +136,19 @@ export default async function HomePageClean() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold font-space-grotesk text-slate-900 dark:text-white">
-                    Filter Categories
-                  </h3>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold font-space-grotesk text-slate-900 dark:text-white">
+                      Filter Categories
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                      Choose a category to filter tasks
+                    </p>
+                  </div>
                 </div>
-                <CategoryFilter categories={categories} />
+                <CategoryFilter
+                  categories={categories}
+                  onFilterChange={handleFilterChange}
+                />
               </div>
 
               {/* Task List Card */}
@@ -153,7 +173,7 @@ export default async function HomePageClean() {
                     Your Tasks
                   </h3>
                 </div>
-                <TaskList />
+                <TaskList categoryFilter={selectedCategoryFilter} />
               </div>
             </div>
           </div>

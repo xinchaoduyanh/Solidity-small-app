@@ -20,43 +20,11 @@ export default function CategoryFilter({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div
-          className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 dark:shadow-indigo-400/30"
-          style={{
-            transform: "translateZ(0)",
-            willChange: "transform",
-          }}
-        >
-          <svg
-            className="w-5 h-5 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"
-            />
-          </svg>
-        </div>
-        <div>
-          <h3 className="text-lg font-bold text-foreground">
-            Filter Categories
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Choose a category to filter tasks
-          </p>
-        </div>
-      </div>
-
+    <div className="space-y-4">
       <div className="flex flex-wrap gap-3">
         <button
           onClick={() => handleFilterChange(null)}
-          className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+          className={`group relative px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
             selectedCategory === null
               ? "bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white shadow-lg shadow-blue-500/30"
               : "bg-card/70 backdrop-blur-sm text-foreground hover:bg-card hover:shadow-md border border-border/50"
@@ -84,7 +52,7 @@ export default function CategoryFilter({
           </span>
           {selectedCategory === null && (
             <div
-              className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:block"
+              className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden sm:block"
               style={{
                 transform: "translateZ(0)",
                 willChange: "opacity",
@@ -97,7 +65,7 @@ export default function CategoryFilter({
           <button
             key={category.id}
             onClick={() => handleFilterChange(category.id)}
-            className={`group relative px-6 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
+            className={`group relative px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
               selectedCategory === category.id
                 ? "bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 text-white shadow-lg shadow-purple-500/30"
                 : "bg-card/70 backdrop-blur-sm text-foreground hover:bg-card hover:shadow-md border border-border/50"
@@ -119,17 +87,17 @@ export default function CategoryFilter({
               {category.name}
             </span>
             {selectedCategory === category.id && (
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-rose-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-rose-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             )}
           </button>
         ))}
       </div>
 
       {categories.length === 0 && (
-        <div className="text-center py-12 animate-in fade-in-50 duration-500">
-          <div className="w-20 h-20 bg-gradient-to-br from-muted to-muted/50 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+        <div className="text-center py-8 animate-in fade-in-50 duration-500">
+          <div className="w-16 h-16 bg-gradient-to-br from-muted to-muted/50 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner">
             <svg
-              className="w-10 h-10 text-muted-foreground"
+              className="w-8 h-8 text-muted-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -142,7 +110,7 @@ export default function CategoryFilter({
               />
             </svg>
           </div>
-          <h4 className="text-lg font-semibold text-foreground mb-2">
+          <h4 className="text-base font-semibold text-foreground mb-2">
             No Categories Yet
           </h4>
           <p className="text-muted-foreground text-sm max-w-xs mx-auto leading-relaxed">

@@ -6,9 +6,19 @@ import TaskItem from "./TaskItem";
 import { CATEGORIES, APP_CONFIG } from "@/constants";
 import type { Task } from "@/types/task";
 
-export default function TaskList() {
+interface TaskListProps {
+  categoryFilter?: number | null;
+}
+
+export default function TaskList({ categoryFilter }: TaskListProps) {
   const { isConnected } = useWallet();
   const { tasks, isLoading, error } = useTasks();
+
+  // Filter tasks based on selected category
+  const filteredTasks =
+    categoryFilter !== null
+      ? tasks.filter((task) => task.categoryId === categoryFilter)
+      : tasks;
 
   if (!isConnected) {
     return (
@@ -41,20 +51,31 @@ export default function TaskList() {
     );
   }
 
-  if (tasks.length === 0) {
+  if (filteredTasks.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-muted-foreground">No tasks yet</p>
-        <p className="text-sm text-muted-foreground/70 mt-1">
-          Create your first task to get started
-        </p>
+        {categoryFilter !== null ? (
+          <>
+            <p className="text-muted-foreground">No tasks in this category</p>
+            <p className="text-sm text-muted-foreground/70 mt-1">
+              Try selecting a different category or create a new task
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-muted-foreground">No tasks yet</p>
+            <p className="text-sm text-muted-foreground/70 mt-1">
+              Create your first task to get started
+            </p>
+          </>
+        )}
       </div>
     );
   }
 
   return (
     <div className="space-y-3">
-      {tasks.map((task: Task) => (
+      {filteredTasks.map((task: Task) => (
         <TaskItem key={task.id} task={task} categories={CATEGORIES} />
       ))}
     </div>

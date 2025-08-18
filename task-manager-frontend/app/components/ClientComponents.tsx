@@ -26,4 +26,4 @@ export const AddTaskForm = dynamic(
 export const TaskList = dynamic(() => import("../../src/components/TaskList"), {
   ssr: false,
   loading: () => <div className="h-32 bg-muted animate-pulse rounded-md" />,
-}) as ComponentType<{}>;
+}) as ComponentType<{ categoryFilter?: number | null }>;
